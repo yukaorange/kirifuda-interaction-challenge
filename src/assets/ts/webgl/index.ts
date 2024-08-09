@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { Pane } from 'tweakpane'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-import Home from '@ts/webgl/Home'
+import Gallery from '@ts/webgl/Gallery'
 
 export type TCanvas = {
   template: string
@@ -32,7 +32,7 @@ export default class Canvas {
   private isTouchDown: boolean = false
 
   //pages
-  private home: Home | null = null
+  private gallery: Gallery | null = null
 
   //three.js objects
   private renderer: THREE.WebGLRenderer | null
@@ -80,9 +80,9 @@ export default class Canvas {
 
     this.createCamera()
 
-    this.createControls()
+    // this.createControls()
 
-    this.createHome()
+    this.createGallery()
   }
 
   private createRenderer() {
@@ -122,17 +122,17 @@ export default class Canvas {
     )
   }
 
-  /**home */
-  private createHome() {
-    this.home = new Home({
+  /**Gallery */
+  private createGallery() {
+    this.gallery = new Gallery({
       scene: this.scene as THREE.Scene,
       sizes: this.sizes as TSizes,
       device: this.device as string
     })
   }
 
-  public destroyHome() {
-    this.home?.destroy()
+  public destroyGallery() {
+    this.gallery?.destroy()
   }
 
   /**
@@ -159,7 +159,7 @@ export default class Canvas {
       device: this.device
     }
 
-    this.home?.onResize(params)
+    this.gallery?.onResize(params)
   }
 
   private updateScale() {
@@ -188,37 +188,14 @@ export default class Canvas {
     }
   }
 
-  public onTouchDown(event: TouchEvent | MouseEvent) {
-    this.isTouchDown = true
+  public onTouchDown() {}
 
-    this.x.start = 'touches' in event ? event.touches[0].clientX : event.clientX
-    this.y.start = 'touches' in event ? event.touches[0].clientY : event.clientY
-
-    const positions = {
-      x: this.x,
-      y: this.y
-    }
-  }
-
-  public onTouchMove(event: TouchEvent | MouseEvent) {
-    if (!this.isTouchDown) return
-
-    const x = 'touches' in event ? event.touches[0].clientX : event.clientX
-    const y = 'touches' in event ? event.touches[0].clientY : event.clientY
-
-    this.x.end = x
-    this.y.end = y
-
-    const positions = {
-      x: this.x,
-      y: this.y
-    }
-  }
+  public onTouchMove() {}
 
   /**loop */
 
   public update(params: any) {
-    this.home?.update(params)
+    this.gallery?.update()
 
     this.renderer?.render(
       this.scene as THREE.Scene,

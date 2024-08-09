@@ -2,11 +2,15 @@ import Page from '@ts/abstract/Page'
 import Logger from '@ts/common/utility/Logger'
 import GSAP from 'gsap'
 
+import { IndicatorManager } from '@ts/pages/Home/component/indicator/Indicator'
+
 type TOptions = {
   device: string
 }
 
 export default class Home extends Page {
+  private indicatorManager: IndicatorManager | null = null
+
   constructor(params: TOptions) {
     super({
       id: 'home',
@@ -18,6 +22,8 @@ export default class Home extends Page {
 
   public create() {
     super.create()
+
+    this.indicatorManager = new IndicatorManager()
   }
 
   /**
@@ -41,5 +47,9 @@ export default class Home extends Page {
 
   public destroy() {
     super.destroy()
+  }
+
+  public update() {
+    this.indicatorManager?.update()
   }
 }

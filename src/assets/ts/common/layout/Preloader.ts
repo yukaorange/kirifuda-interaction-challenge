@@ -142,7 +142,7 @@ export class Animator implements TAnimator {
       onUpdate: function () {
         const progress = this.progress()
 
-        if (progress > 0.8) {
+        if (progress > 0.6) {
           // this logic makes me can modify animation finally.
 
           resolve()

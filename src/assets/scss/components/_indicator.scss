@@ -1,0 +1,14 @@
+@use "./../mixin/" as *;
+
+.indicator {
+  position: fixed;
+  width: 5rem;
+  height: 20rem;
+}
+
+.indicator-speed {
+  position: absolute;
+  width: 100%;
+  height: calc(var(--position) * 100%);
+  background-color: var(--gray-1);
+}
