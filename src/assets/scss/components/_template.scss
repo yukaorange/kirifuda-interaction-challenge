@@ -1,0 +1,75 @@
+@use "./../mixin/" as *;
+
+.template {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--white-1);
+  padding-left: 6rem;
+  padding-top: 1.6rem;
+}
+
+.text-number {
+  padding-top: 0.8rem;
+  font-size: 1.6rem;
+}
+
+.text-sub {
+  padding-top: 6.4rem;
+  font-size: 1.6rem;
+}
+
+.text-main {
+  padding-top: 4rem;
+  font-size: 2.4rem;
+}
+
+.text-message {
+  padding-top: 8rem;
+  font-size: 1.6rem;
+}
+
+@include mq(sp) {
+  .template {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--white-1);
+    padding-left: 6rem;
+    padding-top: 1.6rem;
+  }
+
+  .text-number {
+    padding-top: 0.8rem;
+    font-size: 1.6rem;
+  }
+
+  .text-sub {
+    padding-top: 1.2rem;
+    font-size: 1.6rem;
+  }
+
+  .text-main {
+    padding-top: 0rem;
+    font-size: 2.4rem;
+  }
+
+  .text-message {
+    padding-top: 8rem;
+    font-size: 1.6rem;
+  }
+}

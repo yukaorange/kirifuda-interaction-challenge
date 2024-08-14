@@ -91,7 +91,7 @@ export default class Canvas {
       antialias: true
     })
 
-    this.renderer.setClearColor(0x000000, 0)
+    this.renderer.setClearColor(0x000000, 1)
 
     this.renderer.setPixelRatio(window.devicePixelRatio)
 

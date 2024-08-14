@@ -6,7 +6,8 @@ import Assets from '@ts/common/singleton/Assets'
 
 import * as THREE from 'three'
 
-import Maincard, { TOption } from '@ts/webgl/Gallery/Maincard'
+import Maincard, { TOption } from '@ts/webgl/Gallery/Maincard/Maincard'
+import Subgrid from '@ts/webgl/Gallery/Subgrid/Subgrid'
 
 import { TSizes } from '@ts/webgl'
 
@@ -30,8 +31,13 @@ export default class Gallery {
   private offsetRange: number = 1
 
   private accumulatePosition: number = 0
+  private velocity: number = 0
+  private direction: number = 0
+  private currentIndex: number = 0
+  private changeIndex: boolean = false
 
   private maincards: Maincard[] | null = null
+  private subgrid: Subgrid | null = null
 
   constructor({ scene, sizes, device }: TPage) {
     this.scene = scene
@@ -42,10 +48,17 @@ export default class Gallery {
 
     this.createMaincards()
 
+    this.createSubgrid()
+
     if (this.maincards) {
       this.maincards.forEach(maincard => {
         this.scene.add(maincard.getMesh())
       })
+    }
+
+    if (this.subgrid) {
+      console.log(this.subgrid.getGroup())
+      this.scene.add(this.subgrid.getGroup())
     }
 
     this.show()
@@ -71,24 +84,17 @@ export default class Gallery {
     })
   }
 
+  private createSubgrid() {
+    this.subgrid = new Subgrid({
+      sizes: this.sizes,
+      device: this.device
+    })
+  }
+
   private calculateDimension() {
     this.itemHeight = this.sizes.height
 
     this.totalHeight = this.sizes.height * this.itemLength
-  }
-
-  private updatePositions() {
-    let x: number, y: number
-
-    this.maincards?.forEach((maincard, index) => {
-      let y = this.accumulatePosition * this.itemHeight
-
-      const parameter = {
-        y: y
-      }
-
-      maincard.update(parameter)
-    })
   }
 
   /**
@@ -117,6 +123,8 @@ export default class Gallery {
     this.maincards?.forEach(maincard => {
       maincard.onResize(values)
     })
+
+    this.subgrid?.onResize(values)
   }
 
   /**
@@ -125,7 +133,69 @@ export default class Gallery {
   public update() {
     this.accumulatePosition = this.scrollAccumulator.getScrollPosition()
 
-    this.updatePositions()
+    let targetProgress = Math.abs(this.accumulatePosition % 1)
+
+    targetProgress *= 2
+
+    targetProgress -= 1
+
+    this.updateMaincard(targetProgress)
+
+    this.updateSubgrid(targetProgress)
+  }
+
+  private updateMaincard(progress: number) {
+    let x: number, y: number
+
+    let p = 1 - Math.abs(progress)
+
+    this.maincards?.forEach((maincard, index) => {
+      let y = this.accumulatePosition * this.itemHeight
+
+      const parameter = {
+        y: y,
+        progress: p
+      }
+
+      maincard.update(parameter)
+    })
+  }
+
+  private updateSubgrid(progress: number) {
+    this.direction = this.scrollAccumulator.getDirection()
+
+    let p = 1 - Math.abs(progress)
+
+    let step = Math.abs(this.accumulatePosition % 1)
+
+    this.subgrid?.update(p, step)
+
+    let newIndex = Math.floor(this.accumulatePosition)
+
+    newIndex =
+      ((newIndex % this.itemLength) + this.itemLength) % this.itemLength
+
+    newIndex = Math.round(newIndex)
+
+    const threshold = 0.02
+
+    if (p < threshold) {
+      p = 0
+    }
+
+    if (p > 0) {
+      this.changeIndex = false
+    } else {
+      this.changeIndex = true
+    }
+
+    if (this.changeIndex == true && p == 0) {
+      this.currentIndex = newIndex
+    }
+
+    this.subgrid?.setDirection(this.direction)
+
+    this.subgrid?.setContentIndex(this.currentIndex)
   }
 
   /**

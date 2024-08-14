@@ -5,8 +5,8 @@ import * as THREE from 'three'
 import Assets from '@ts/common/singleton/Assets'
 import DebugPane from '@ts/common/singleton/Pane'
 
-import vertexShader from '@ts/webgl/shaders/vertex.glsl'
-import fragmentShader from '@ts/webgl/shaders/fragment.glsl'
+import vertexShader from '@ts/webgl/shaders/maincard-vertex.glsl'
+import fragmentShader from '@ts/webgl/shaders/maincard-fragment.glsl'
 
 import { TSizes } from '@ts/webgl'
 
@@ -83,7 +83,7 @@ export default class Maincard {
   }
 
   private createGeometry() {
-    this.geometry = new THREE.PlaneGeometry(1, 1, 10, 10)
+    this.geometry = new THREE.PlaneGeometry(1, 1, 20, 20)
   }
 
   private createMaterial() {
@@ -91,10 +91,13 @@ export default class Maincard {
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
       side: THREE.DoubleSide,
+      transparent: true,
       uniforms: {
         uTexture: { value: this.texture },
         uAlpha: { value: 0 },
         uAspect: { value: 0 },
+        uProgress: { value: 0 },
+        uViewPortSize: { value: null },
         uTextureAspect: { value: this.textureAspect }
       }
     })
@@ -174,8 +177,15 @@ export default class Maincard {
    */
 
   updateScale() {
-    const width = this.sizes.width * 0.5
-    const height = width * 0.75
+    let width: number, height: number
+
+    if (this.device == 'pc') {
+      width = this.sizes.width * 0.5
+      height = (width * 3) / 4
+    } else {
+      width = this.sizes.width * 0.75
+      height = (width * 3) / 4
+    }
 
     this.cardAspect = width / height
 
@@ -184,6 +194,23 @@ export default class Maincard {
     const shaderMaterial = this.mesh?.material as THREE.ShaderMaterial
 
     shaderMaterial.uniforms.uAspect.value = this.cardAspect
+
+    shaderMaterial.uniforms.uViewPortSize.value = new THREE.Vector2(
+      this.sizes.width,
+      this.sizes.height
+    )
+  }
+
+  updateX() {
+    if (!this.mesh) return
+
+    if (this.device === 'pc') {
+      const x = this.sizes.width / 2
+
+      this.mesh.position.x = -x / 2 + x / 2 + x / 4
+    } else {
+      this.mesh.position.x = 0
+    }
   }
 
   updateY() {
@@ -197,55 +224,41 @@ export default class Maincard {
       targetPosition -= this.totalHeight
 
       this.standardPosition -= this.totalHeight
-
-      if (this.index === 0) {
-        console.log('wrap')
-      }
     } else if (targetPosition < -offsetRange) {
       targetPosition += this.totalHeight
 
       this.standardPosition += this.totalHeight
-
-      if (this.index === 0) {
-        console.log('reverse wrap')
-      }
     }
 
     this.mesh.position.y = targetPosition
+  }
 
-    // if (this.index === 0) {
-    //   console.log(
-    //     `y:`,
-    //     y,
-    //     `positionY:`,
-    //     this.mesh.position.y,
-    //     `\n`,
-    //     `total:`,
-    //     this.totalHeight,
-    //     `offsetRange:`,
-    //     offsetRange,
-    //     `total - offset:`,
-    //     this.totalHeight - offsetRange,
-    //     `standardPosition:`,
-    //     this.standardPosition
-    //   )
-    // }
+  updateZ(progress: number) {
+    if (!this.mesh) return
+
+    this.mesh.position.z = progress
   }
 
   updateGallerySection() {
     this.gallerySection = Math.floor(this.y / this.sizes.height)
   }
 
-  update(params: { y: number }) {
+  update(params: { y: number; progress: number }) {
+    const { y, progress } = params
+
     if ((this.mesh?.material as THREE.ShaderMaterial).uniforms.uAlpha) {
       const shaderMaterial = this.mesh?.material as THREE.ShaderMaterial
 
       shaderMaterial.uniforms.uAlpha.value = this.pane?.getParams().alpha
+
+      shaderMaterial.uniforms.uProgress.value = progress
     }
 
     this.y = params.y
 
+    this.updateX()
     this.updateY()
+    this.updateZ(progress)
 
     this.updateGallerySection()
   }

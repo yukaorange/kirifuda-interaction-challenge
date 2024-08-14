@@ -6,17 +6,18 @@ export default class ScrollAccumulator {
 
   private scrollPosition: number = 0
   private velocity: number = 0
+  private lastInputDirection: number = 0
   private touchStartY: number | null = null
   private lastTouchY: number | null = null
   private touchVelocity: number = 0
 
-  private decayRate: number = 7.0
-  private lerpSpeed: number = 20.0
+  private decayRate: number = 20.0
+  private lerpSpeed: number = 16.0
   private maxVelocity: number = 1
   private minVelocity: number = 0.001
 
-  private sensitivity: number = 0.0005
-  private touchSensitivity: number = 0.00006
+  private sensitivity: number = 0.001
+  private touchSensitivity: number = 2.0
 
   private clock: THREE.Clock
   private lastUpdateTime: number = 0
@@ -43,7 +44,14 @@ export default class ScrollAccumulator {
 
   private handleWheel(event: WheelEvent): void {
     const normalizedWheel = normalizeWheel(event)
-    this.addDelta(normalizedWheel.pixelY)
+
+    const isTrackpad = Math.abs(normalizedWheel.pixelY) < 50
+
+    if (isTrackpad) {
+      this.addDelta(normalizedWheel.pixelY * 1.5)
+    } else {
+      this.addDelta(normalizedWheel.pixelY)
+    }
   }
 
   private handleTouchStart(event: TouchEvent): void {
@@ -71,6 +79,12 @@ export default class ScrollAccumulator {
 
   public addDelta(delta: number): void {
     this.velocity += delta * this.sensitivity
+
+    const threshold = 0.0001
+    
+    if (Math.abs(delta) > threshold) {
+      this.lastInputDirection = delta > 0 ? 1 : -1
+    }
   }
 
   public update(): void {
@@ -93,12 +107,15 @@ export default class ScrollAccumulator {
       -this.maxVelocity
     )
 
+    const oldPosition = this.scrollPosition
+
     this.scrollPosition += this.velocity * delta * 60
 
     let targetSection = Math.round(this.scrollPosition)
+
     let dif = targetSection - this.scrollPosition
 
-    const threshold = 0.00001
+    const threshold = 0.001
 
     if (Math.abs(dif) < threshold) {
       this.scrollPosition = targetSection
@@ -115,6 +132,10 @@ export default class ScrollAccumulator {
 
   public getVelocity(): number {
     return this.velocity
+  }
+
+  public getDirection(): number {
+    return this.lastInputDirection
   }
 
   public setDecayRate(rate: number): void {
