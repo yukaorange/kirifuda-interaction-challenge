@@ -2,6 +2,7 @@ import map from 'lodash/map'
 import GSAP from 'gsap'
 import Logger from '@ts/common/utility/Logger'
 import ScrollAccumulator from '@ts/common/singleton/ScrollAccumulator'
+import ScrollAnimator from '@ts/common/singleton/ScrollAnimator'
 import Assets from '@ts/common/singleton/Assets'
 
 import * as THREE from 'three'
@@ -166,7 +167,13 @@ export default class Gallery {
 
     let p = 1 - Math.abs(progress)
 
-    let step = Math.abs(this.accumulatePosition % 1)
+    let step = Math.abs(this.scrollAccumulator.getScrollPosition() % 1)
+
+    if (this.direction == -1) {
+      step = 1 - step
+    }
+
+    step = GSAP.utils.mapRange(0.25, 1.0, 0.0, 1.2, step)
 
     this.subgrid?.update(p, step)
 

@@ -1,0 +1,51 @@
+@use "./../mixin/" as *;
+
+.attention {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.5rem;
+}
+
+.attention__text {
+  color: var(--white-1);
+}
+
+.attention__icon {
+  --size: 2rem;
+  width: var(--size);
+  height: var(--size);
+  display: grid;
+}
+
+.attention__icon svg {
+  width: var(--size);
+  height: var(--size);
+}
+
+@include mq(sp) {
+  .attention {
+    grid-area: attention;
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5rem;
+  }
+
+  .attention__text {
+    color: var(--white-1);
+    font-size: 0.9rem;
+  }
+
+  .attention__icon {
+    --size: 1.4rem;
+    width: var(--size);
+    height: var(--size);
+    display: grid;
+  }
+
+  .attention__icon svg {
+    width: var(--size);
+    height: var(--size);
+  }
+}

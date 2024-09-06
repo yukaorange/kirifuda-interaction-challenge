@@ -225,7 +225,7 @@ export default class Subgrid {
           mesh.material = this.subMaterial as THREE.ShaderMaterial
         }
       } else {
-        if (mesh.userData.xi == 5 && mesh.userData.yi == 3) {
+        if (mesh.userData.xi == 5 && mesh.userData.yi == 4) {
           mesh.material = this.mainMaterial as THREE.ShaderMaterial
         } else {
           mesh.material = this.subMaterial as THREE.ShaderMaterial
@@ -253,7 +253,7 @@ export default class Subgrid {
       this.gridWidth = this.sizes.width * 0.2
       this.gridHeight = (this.gridWidth * 4) / 3
     } else {
-      this.gridWidth = this.sizes.width * 0.25
+      this.gridWidth = this.sizes.width * 0.4
       this.gridHeight = (this.gridWidth * 4) / 3
     }
 

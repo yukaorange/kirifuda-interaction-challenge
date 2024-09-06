@@ -211,7 +211,7 @@ export class DrawCanvas {
     }
 
     if (rectDraw) {
-      let scale = index / 2 + 0.5
+      let scale = index / 4 + 0.5
 
       this.ctx.fillRect(
         -this.canvas.width * scale + this.canvas.width * 2 * scale * step,
@@ -227,7 +227,7 @@ export class DrawCanvas {
     this.ctx.strokeStyle = '#fff'
     this.ctx.beginPath()
     this.ctx.moveTo(0, 0)
-    this.ctx.lineTo(0, this.currentY - this.mainFontSize)
+    this.ctx.lineTo(0, (this.currentY - this.mainFontSize) * (1 - progress))
     this.ctx.stroke()
   }
 

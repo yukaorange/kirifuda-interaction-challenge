@@ -31,7 +31,7 @@ export default class Transition {
 
             return this.page.destroy()
           },
-          enter: data => {
+          enter: (data: any) => {
             Logger.log(`from Transition.ts / page enter`)
 
             const parser = new DOMParser()
