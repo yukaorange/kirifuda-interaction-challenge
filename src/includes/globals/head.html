@@ -23,6 +23,9 @@
 <!-- カノニカルタグ -->
 <link rel="canonical" href="https://{{site.domain}}{{pagePath}}" />
 
+<!-- OGP type -->
+<meta property="og:type" content="website" />
+
 <!-- OGP title -->
 {{#if page.pageTitle}}
 <meta property="og:title" content="{{page.pageTitle}}{{site.name_separate}}{{site.name}}" />
@@ -43,8 +46,10 @@
 <!-- OGP image -->
 {{#if page.ogp.image}}
 <meta property="og:image" content="{{page.ogp.image}}" />
+<meta name="twitter:image" content="{{page.ogp.image}}" />
 {{else if site.ogp.image}}
 <meta property="og:image" content="{{site.ogp.image}}" />
+<meta name="twitter:image" content="{{site.ogp.image}}" />
 {{/if}}
 
 <!-- OGP site_name -->
@@ -58,6 +63,13 @@
 <meta name="twitter:card" content="{{page.twitter.card}}" />
 {{else if site.ogp.type}}
 <meta name="twitter:card" content="{{site.ogp.type}}" />
+{{/if}}
+
+<!-- Twitter title -->
+{{#if page.pageTitle}}
+<meta name="twitter:title" content="{{page.pageTitle}}{{site.name_separate}}{{site.name}}" />
+{{else}}
+<meta name="twitter:title" content="{{site.name}}" />
 {{/if}}
 
 <!-- Twitter site -->
