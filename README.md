@@ -20,8 +20,9 @@ This project involves creating a visually dynamic slideshow using a combination 
 
 # comment
 
-無限に循環するスライドショーに webgl でエフェクトを追加。canvas2d と material を組み合わせて、インタラクションを作りました。  
-Canvas2D 内での文字間隔の調整やスクロール感度の調整に苦労しました。
+- 無限に循環するスライドショーに webgl でエフェクトを追加。canvas2d と material を組み合わせて、インタラクションを作りました。  
+- Canvas2D 内での文字間隔の調整やスクロール感度の調整に苦労しました。
 
 - I added WebGL effects to an infinitely looping slideshow.
-- I created interactions by Canvas 2D and Three.js material. I struggled with adjusting character spacing within Canvas 2D and fine-tuning scroll sensitivity.
+- I created interactions by Canvas 2D and Three.js material. 
+- I struggled with adjusting character spacing within Canvas 2D and fine-tuning scroll sensitivity.
