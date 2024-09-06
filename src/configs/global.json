@@ -2,7 +2,7 @@
   "site": {
     "name": "interaction-challenge",
     "name_separate": " | ",
-    "domain": "design-embraced-challenge.vercel.app",
+    "domain": "https://kirifuda-interaction-challenge.vercel.app",
     "favicon": "/favicon.svg",
     "description": "portfolio",
     "ogp": {
