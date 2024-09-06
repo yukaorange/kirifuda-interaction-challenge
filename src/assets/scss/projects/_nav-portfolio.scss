@@ -7,8 +7,8 @@
   width: 100%;
   display: grid;
   grid-template-columns: 7fr 3fr;
-  padding-inline: calc(var(--col) * 1);
-  padding-block: calc(var(--col) * 1);
+  padding-inline: calc(var(--col) * 0.25);
+  padding-block: calc(var(--col) * 0.25);
   column-gap: 2rem;
 }
 
@@ -22,8 +22,8 @@
     grid-template-columns: auto;
     grid-template-areas: "attention" "list";
     row-gap: 0.4rem;
-    padding-inline: calc(var(--col) * 1);
-    padding-block: calc(var(--col) * 1);
+    padding-inline: calc(var(--col) * 0.25);
+    padding-block: calc(var(--col) * 0.25);
     column-gap: 2rem;
   }
 }

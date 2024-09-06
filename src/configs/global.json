@@ -1,13 +1,13 @@
 {
   "site": {
-    "name": "takaoka-portfolio",
+    "name": "interaction-challenge",
     "name_separate": " | ",
-    "domain": "takaoka.com",
+    "domain": "design-embraced-challenge.vercel.app",
     "favicon": "/favicon.svg",
-    "description": "portfolio site.",
+    "description": "portfolio",
     "ogp": {
       "type": "website",
-      "image": "/ogp.jpg"
+      "image": "https://kirifuda-interaction-challenge.vercel.app/ogp.jpg"
     },
     "twitter": {
       "card": "summary_large_image",
