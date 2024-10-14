@@ -11,6 +11,8 @@ export default class ScrollAccumulator {
   private lastTouchY: number | null = null
   private touchVelocity: number = 0
 
+  private isTouchInProgress: boolean = false
+
   private decayRate: number = 20.0
   private lerpSpeed: number = 16.0
   private maxVelocity: number = 1
@@ -58,6 +60,7 @@ export default class ScrollAccumulator {
     this.touchStartY = event.touches[0].clientY
     this.lastTouchY = event.touches[0].clientY
     this.touchVelocity = 0
+    this.isTouchInProgress = true
   }
 
   private handleTouchMove(event: TouchEvent): void {
@@ -75,13 +78,14 @@ export default class ScrollAccumulator {
   private handleTouchEnd(): void {
     this.touchStartY = null
     this.lastTouchY = null
+    this.isTouchInProgress = false
   }
 
   public addDelta(delta: number): void {
     this.velocity += delta * this.sensitivity
 
     const threshold = 0.0001
-    
+
     if (Math.abs(delta) > threshold) {
       this.lastInputDirection = delta > 0 ? 1 : -1
     }
@@ -96,10 +100,12 @@ export default class ScrollAccumulator {
 
     const decay = Math.exp(-this.decayRate * delta)
 
-    this.velocity *= decay
+    if (!this.isTouchInProgress) {
+      this.velocity *= decay
 
-    if (Math.abs(this.velocity) < this.minVelocity) {
-      this.velocity = 0
+      if (Math.abs(this.velocity) < this.minVelocity) {
+        this.velocity = 0
+      }
     }
 
     this.velocity = Math.max(
@@ -114,6 +120,10 @@ export default class ScrollAccumulator {
     let targetSection = Math.round(this.scrollPosition)
 
     let dif = targetSection - this.scrollPosition
+
+    if (this.isTouchInProgress && Math.abs(targetSection - Math.round(oldPosition)) >= 1) {
+      this.isTouchInProgress = false
+    }
 
     const threshold = 0.001
 
